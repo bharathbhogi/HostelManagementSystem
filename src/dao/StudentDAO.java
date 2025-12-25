@@ -5,6 +5,8 @@ import util.DBConnection;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 public class StudentDAO {
 
@@ -24,4 +26,21 @@ public class StudentDAO {
             e.printStackTrace();
         }
     }
+    public void viewStudents() {
+        String sql = "SELECT * FROM students";
+
+        try (Connection con = DBConnection.getConnection();
+             Statement st = con.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+
+            while (rs.next()) {
+                System.out.println(
+                        rs.getInt("id") + " " + rs.getString("name") + " " + rs.getString("room_no") + " " + rs.getString("phone")
+                );
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

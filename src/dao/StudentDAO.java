@@ -42,5 +42,62 @@ public class StudentDAO {
             e.printStackTrace();
         }
     }
+    public void viewStudentsByRoom(String roomNo) {
+
+        String sql = "SELECT * FROM students WHERE room_no = ?";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, roomNo);
+            ResultSet rs = ps.executeQuery();
+
+            boolean found = false;
+
+            System.out.println("\nStudents in Room " + roomNo + ":");
+            System.out.println("-----------------------------");
+
+            while (rs.next()) {
+                found = true;
+                System.out.println(
+                        rs.getInt("id") + " " +
+                                rs.getString("name") + " " +
+                                rs.getString("phone")
+                );
+            }
+
+            if (!found) {
+                System.out.println("No students found in this room.");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public boolean isRoomFull(String roomNo) {
+
+        String sql = """
+        SELECT COUNT(*) >= capacity
+        FROM students s
+        JOIN rooms r ON s.room_no = r.room_no
+        WHERE r.room_no = ?
+        """;
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, roomNo);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getBoolean(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
 
 }

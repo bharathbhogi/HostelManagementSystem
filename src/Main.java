@@ -27,7 +27,9 @@ public class Main {
             System.out.println("4. View Available Rooms");
             System.out.println("5. View All Rooms");
             System.out.println("6. Search Students by Room No");
-            System.out.println("7. Exit");
+            System.out.println("7. View Fee Details");
+            System.out.println("8. Exit");
+
 
             System.out.print("Enter choice: ");
             int choice = sc.nextInt();
@@ -83,6 +85,10 @@ public class Main {
                     break;
 
                 case 7:
+                    feeDAO.viewFees();
+                    break;
+
+                case 8:
                     System.out.println("Thank You❤️");
                     System.exit(0);
 

@@ -1,5 +1,5 @@
 import java.util.Scanner;
-
+import dao.StudentHibernateDAO;
 import dao.StudentDAO;
 import dao.FeeDAO;
 import dao.RoomDAO;
@@ -16,6 +16,11 @@ public class Main {
         Scanner sc = new Scanner(System.in);
 
         StudentDAO studentDAO = new StudentDAO();
+        StudentDAO studentJdbcDAO = new StudentDAO();
+        StudentHibernateDAO studentHibernateDAO = new StudentHibernateDAO();
+
+
+
         FeeDAO feeDAO = new FeeDAO();
         RoomDAO roomDAO = new RoomDAO();
 
@@ -44,21 +49,16 @@ public class Main {
                     System.out.print("Room No: ");
                     String room = sc.nextLine();
 
-                    if (studentDAO.isRoomFull(room)) {
-                        System.out.println("Room is already full!");
-                        break;   // exits this case safely
-                    }
-
                     System.out.print("Phone: ");
                     String phone = sc.nextLine();
 
-                    studentDAO.addStudent(new Student(name, room, phone));
+                    studentHibernateDAO.addStudent(new Student(name, room, phone));
                     break;
-
 
                 case 2:
-                    studentDAO.viewStudents();
+                    studentHibernateDAO.viewStudents();
                     break;
+
 
                 case 3:
                     System.out.print("Student ID: ");

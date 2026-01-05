@@ -1,28 +1,20 @@
+import java.math.BigDecimal;
 import java.util.Scanner;
+
+import dao.FeeHibernateDAO;
+import dao.RoomHibernateDAO;
 import dao.StudentHibernateDAO;
-import dao.StudentDAO;
-import dao.FeeDAO;
-import dao.RoomDAO;
 import model.Student;
-import util.DBConnection;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        // Load env + verify DB connection
-        DBConnection.getConnection();
-
         Scanner sc = new Scanner(System.in);
 
-        StudentDAO studentDAO = new StudentDAO();
-        StudentDAO studentJdbcDAO = new StudentDAO();
         StudentHibernateDAO studentHibernateDAO = new StudentHibernateDAO();
-
-
-
-        FeeDAO feeDAO = new FeeDAO();
-        RoomDAO roomDAO = new RoomDAO();
+        RoomHibernateDAO roomHibernateDAO = new RoomHibernateDAO();
+        FeeHibernateDAO feeHibernateDAO = new FeeHibernateDAO();
 
         while (true) {
             System.out.println("\n==== Hostel Management System ====");
@@ -34,7 +26,6 @@ public class Main {
             System.out.println("6. Search Students by Room No");
             System.out.println("7. View Fee Details");
             System.out.println("8. Exit");
-
 
             System.out.print("Enter choice: ");
             int choice = sc.nextInt();
@@ -59,39 +50,37 @@ public class Main {
                     studentHibernateDAO.viewStudents();
                     break;
 
-
                 case 3:
                     System.out.print("Student ID: ");
                     int studentId = sc.nextInt();
 
                     System.out.print("Amount: ");
-                    double amount = sc.nextDouble();
+                    BigDecimal amount = sc.nextBigDecimal();
 
-                    feeDAO.payFee(studentId, amount);
+                    feeHibernateDAO.payFee(studentId, amount);
                     break;
 
                 case 4:
-                    roomDAO.viewAvailableRooms();
+                    roomHibernateDAO.viewAvailableRooms();
                     break;
 
                 case 5:
-                    roomDAO.viewAllRooms();
+                    roomHibernateDAO.viewAllRooms();
                     break;
 
                 case 6:
                     System.out.print("Enter Room No: ");
                     String roomNo = sc.nextLine();
-                    studentDAO.viewStudentsByRoom(roomNo);
+                    studentHibernateDAO.viewStudentsByRoom(roomNo);
                     break;
 
                 case 7:
-                    feeDAO.viewFees();
+                    feeHibernateDAO.viewFees();
                     break;
 
                 case 8:
-                    System.out.println("Thank You❤️");
+                    System.out.println("Thank You ❤️");
                     System.exit(0);
-
 
                 default:
                     System.out.println("Invalid choice. Try again.");

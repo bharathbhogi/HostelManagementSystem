@@ -30,6 +30,9 @@
 
         <!-- Entity mapping -->
         <mapping class="model.Student"/>
+        <mapping class="model.Room"/>
+        <mapping class="model.Fee"/>
+
 
     </session-factory>
 </hibernate-configuration>

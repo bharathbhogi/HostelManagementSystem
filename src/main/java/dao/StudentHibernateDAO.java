@@ -71,6 +71,13 @@ public class StudentHibernateDAO {
         }
     }
 
+    public List<Student> getAllStudents() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.createQuery("FROM Student", Student.class).list();
+        }
+    }
+
+
 
     public boolean isRoomFull(String roomNo, int capacity) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {

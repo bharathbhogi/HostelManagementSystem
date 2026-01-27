@@ -3,7 +3,7 @@ import org.apache.catalina.Context;
 import org.apache.catalina.connector.Connector;
 
 import java.io.File;
-
+import controller.RoomServlet;
 import controller.StudentServlet;
 
 public class Main {
@@ -26,6 +26,10 @@ public class Main {
 
         Tomcat.addServlet(ctx, "studentServlet", new StudentServlet());
         ctx.addServletMappingDecoded("/students", "studentServlet");
+
+        Tomcat.addServlet(ctx, "roomServlet", new RoomServlet());
+        ctx.addServletMappingDecoded("/rooms", "roomServlet");
+
 
         try {
             tomcat.start();

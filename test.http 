@@ -1,0 +1,21 @@
+### Add student to FULL room (should fail)
+POST http://localhost:8080/students
+Content-Type: application/json
+
+{
+  "name": "Test User",
+  "roomNo": "A102",
+  "phone": "9999999999"
+}
+
+###
+
+### Add student to AVAILABLE room (should succeed)
+POST http://localhost:8080/students
+Content-Type: application/json
+
+{
+  "name": "New Student",
+  "roomNo": "A101",
+  "phone": "8888888888"
+}

@@ -3,37 +3,34 @@ package dao;
 import model.Room;
 import org.hibernate.Session;
 import util.HibernateUtil;
-
+import dao.RoomHibernateDAO;
 import java.util.List;
 
 public class RoomHibernateDAO {
 
-    public void viewAllRooms() {
+
+
+    public List<Room> getAllRooms() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            List<Room> rooms = session.createQuery("from Room", Room.class).list();
-
-            System.out.println("\nRoom No\tStatus\tCapacity");
-            System.out.println("------------------------");
-
-            for (Room r : rooms) {
-                System.out.println(
-                        r.getRoomNo() + "\t" +
-                                r.getStatus() + "\t" +
-                                r.getCapacity()
-                );
-            }
+            return session.createQuery("from Room", Room.class).list();
         }
     }
 
-    public void viewAvailableRooms() {
+    public List<Room> getRoomsByStatus(String status) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            List<Room> rooms = session.createQuery(
-                    "from Room where status='AVAILABLE'", Room.class
-            ).list();
-
-            rooms.forEach(r ->
-                    System.out.println("Available Room: " + r.getRoomNo())
-            );
+            return session.createQuery(
+                            "from Room where status = :status", Room.class
+                    ).setParameter("status", status)
+                    .list();
         }
     }
+
+    public Room getRoomByRoomNo(String roomNo) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.get(Room.class, roomNo);
+        }
+    }
+
+
+
 }

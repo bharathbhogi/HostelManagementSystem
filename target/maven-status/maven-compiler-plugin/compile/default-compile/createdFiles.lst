@@ -5,6 +5,7 @@ util/DBConnection.class
 controller/StudentServlet.class
 Main.class
 util/HibernateUtil.class
+controller/RoomServlet.class
 model/Fee.class
 util/RestServer.class
 util/TomcatServer.class
@@ -12,3 +13,5 @@ dao/RoomHibernateDAO.class
 dao/FeeHibernateDAO.class
 model/Student.class
 dao/StudentHibernateDAO.class
+controller/StudentServlet$MessageResponse.class
+controller/RoomServlet$MessageResponse.class

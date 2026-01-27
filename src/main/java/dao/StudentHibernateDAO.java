@@ -93,4 +93,30 @@ public class StudentHibernateDAO {
             return count != null && count >= capacity;
         }
     }
+
+    public void saveStudent(Student student) {
+        Transaction tx = null;
+
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            tx = session.beginTransaction();
+            session.persist(student);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    public List<Student> getStudentsByRoomNo(String roomNo) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.createQuery(
+                            "FROM Student WHERE roomNo = :roomNo",
+                            Student.class
+                    ).setParameter("roomNo", roomNo)
+                    .getResultList();
+        }
+    }
+
+
 }

@@ -22,10 +22,10 @@ public class Student {
     @Column(name = "phone")
     private String phone;
 
-    // 🔹 Required by Hibernate
+    //  Required by Hibernate
     public Student() {}
 
-    // 🔹 Optional constructor
+    //  Optional constructor
     public Student(String name, String roomNo, String phone) {
         this.name = name;
         this.roomNo = roomNo;

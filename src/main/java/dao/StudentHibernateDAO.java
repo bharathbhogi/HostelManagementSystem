@@ -118,5 +118,20 @@ public class StudentHibernateDAO {
         }
     }
 
+    public void deleteStudentById(int id) {
+        Transaction tx = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            tx = session.beginTransaction();
+            Student s = session.get(Student.class, id);
+            if (s != null) {
+                session.remove(s);
+            }
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            throw e;
+        }
+    }
+
 
 }

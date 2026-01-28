@@ -6,6 +6,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import util.HibernateUtil;
 
+
 import java.math.BigDecimal;
 import java.util.List;
 public class FeeHibernateDAO {
@@ -75,5 +76,18 @@ public class FeeHibernateDAO {
             ).setParameter("sid", studentId).list();
         }
     }
+
+    public BigDecimal getTotalPaidByStudent(int studentId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            BigDecimal sum = session.createQuery(
+                            "select sum(f.amount) from Fee f where f.studentId = :sid",
+                            BigDecimal.class
+                    ).setParameter("sid", studentId)
+                    .uniqueResult();
+
+            return sum != null ? sum : BigDecimal.ZERO;
+        }
+    }
+
 
 }

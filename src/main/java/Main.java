@@ -6,6 +6,8 @@ import java.io.File;
 import controller.RoomServlet;
 import controller.StudentServlet;
 import controller.FeeServlet;
+import controller.AdminDashboardServlet;
+
 
 
 public class Main {
@@ -34,6 +36,10 @@ public class Main {
 
         Tomcat.addServlet(ctx, "feeServlet", new FeeServlet());
         ctx.addServletMappingDecoded("/fees", "feeServlet");
+
+        Tomcat.addServlet(ctx, "adminDashboardServlet", new AdminDashboardServlet());
+        ctx.addServletMappingDecoded("/admin/summary", "adminDashboardServlet");
+
 
 
 

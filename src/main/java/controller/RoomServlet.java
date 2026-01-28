@@ -1,4 +1,5 @@
 package controller;
+import model.Message;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dao.RoomHibernateDAO;
@@ -49,4 +50,13 @@ public class RoomServlet extends HttpServlet {
             this.message = message;
         }
     }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        Room room = mapper.readValue(req.getInputStream(), Room.class);
+        dao.addRoom(room);
+        mapper.writeValue(resp.getWriter(),
+                new Message("Room added successfully"));
+    }
+
 }

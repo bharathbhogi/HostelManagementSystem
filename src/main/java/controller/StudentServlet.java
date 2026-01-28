@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.Student;
-
+import model.Message;
 import java.io.IOException;
 import java.util.List;
 
@@ -109,4 +109,23 @@ public class StudentServlet extends HttpServlet {
             this.message = message;
         }
     }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String idParam = req.getParameter("id");
+
+        if (idParam == null) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            mapper.writeValue(resp.getWriter(),
+                    new Message("Student id is required"));
+            return;
+        }
+
+        int id = Integer.parseInt(idParam);
+        dao.deleteStudentById(id);
+
+        mapper.writeValue(resp.getWriter(),
+                new Message("Student removed successfully"));
+    }
+
 }

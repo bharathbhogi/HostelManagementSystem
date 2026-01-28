@@ -2,9 +2,11 @@ package dao;
 
 import model.Room;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import util.HibernateUtil;
 import dao.RoomHibernateDAO;
 import java.util.List;
+import org.hibernate.Transaction;
 
 public class RoomHibernateDAO {
 
@@ -40,6 +42,18 @@ public class RoomHibernateDAO {
                 session.merge(room);
             }
             tx.commit();
+        }
+    }
+
+    public void addRoom(Room room) {
+        Transaction tx = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            tx = session.beginTransaction();
+            session.persist(room);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            throw e;
         }
     }
 

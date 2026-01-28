@@ -2,16 +2,6 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
          http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <build>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <includes>
-                    <include>**/*</include>
-                </includes>
-            </resource>
-        </resources>
-    </build>
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -23,6 +13,17 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
     </properties>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
 
     <dependencies>
 
@@ -47,7 +48,7 @@
             <version>8.3.0</version>
         </dependency>
 
-        <!-- Servlet API (provided by Tomcat) -->
+        <!-- Servlet API (provided by embedded Tomcat at runtime) -->
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
@@ -55,10 +56,17 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Jackson JSON -->
+        <!-- Jackson JSON (ObjectMapper) -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
+            <version>2.17.1</version>
+        </dependency>
+
+        <!-- Jackson support for Java 8+ Date/Time (LocalDate) -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
             <version>2.17.1</version>
         </dependency>
 
@@ -83,15 +91,6 @@
             <version>10.1.18</version>
         </dependency>
 
-
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-        </dependency>
-
-
-
     </dependencies>
-
 
 </project>

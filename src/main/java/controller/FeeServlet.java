@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.Fee;
-
+import model.Message;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
@@ -58,11 +58,13 @@ public class FeeServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        resp.setContentType("application/json");
-        resp.setCharacterEncoding("UTF-8");
-
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException
+    {
         String sid = req.getParameter("studentId");
+        String summary = req.getParameter("summary");
+
+        resp.setContentType("application/json");
+
         if (sid == null) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             mapper.writeValue(resp.getWriter(), new Message("studentId is required"));
@@ -70,9 +72,18 @@ public class FeeServlet extends HttpServlet {
         }
 
         int studentId = Integer.parseInt(sid);
+
+        if ("true".equals(summary)) {
+            var result = new java.util.HashMap<String, Object>();
+            result.put("studentId", studentId);
+            result.put("totalPaid", feeDao.getTotalPaidByStudent(studentId));
+            mapper.writeValue(resp.getWriter(), result);
+            return;
+        }
+
         List<Fee> fees = feeDao.getFeesByStudentId(studentId);
-        resp.setStatus(HttpServletResponse.SC_OK);
         mapper.writeValue(resp.getWriter(), fees);
+
     }
 
     static class Message {

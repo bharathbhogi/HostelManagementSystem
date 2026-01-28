@@ -5,6 +5,8 @@ import org.apache.catalina.connector.Connector;
 import java.io.File;
 import controller.RoomServlet;
 import controller.StudentServlet;
+import controller.FeeServlet;
+
 
 public class Main {
 
@@ -12,7 +14,7 @@ public class Main {
 
         Tomcat tomcat = new Tomcat();
 
-        // ✅ REQUIRED CONNECTOR
+
         Connector connector = new Connector();
         connector.setPort(8080);
         tomcat.setConnector(connector);
@@ -29,6 +31,10 @@ public class Main {
 
         Tomcat.addServlet(ctx, "roomServlet", new RoomServlet());
         ctx.addServletMappingDecoded("/rooms", "roomServlet");
+
+        Tomcat.addServlet(ctx, "feeServlet", new FeeServlet());
+        ctx.addServletMappingDecoded("/fees", "feeServlet");
+
 
 
         try {

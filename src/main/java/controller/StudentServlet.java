@@ -54,6 +54,13 @@ public class StudentServlet extends HttpServlet {
 
 
             dao.saveStudent(student);
+            long count = dao.getStudentsByRoomNo(roomNo).size();
+            if (count >= room.getCapacity()) {
+                roomDao.updateRoomStatus(roomNo, "OCCUPIED");
+            } else {
+                roomDao.updateRoomStatus(roomNo, "AVAILABLE");
+            }
+
 
 
             resp.setStatus(HttpServletResponse.SC_CREATED);

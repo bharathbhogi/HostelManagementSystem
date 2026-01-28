@@ -31,6 +31,18 @@ public class RoomHibernateDAO {
         }
     }
 
+    public void updateRoomStatus(String roomNo, String status) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            var tx = session.beginTransaction();
+            Room room = session.get(Room.class, roomNo);
+            if (room != null) {
+                room.setStatus(status);
+                session.merge(room);
+            }
+            tx.commit();
+        }
+    }
+
 
 
 }

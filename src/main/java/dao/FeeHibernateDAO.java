@@ -24,7 +24,10 @@ public class FeeHibernateDAO {
 
             tx = session.beginTransaction();
 
-            Fee fee = new Fee(studentId, amount);
+            Fee fee = new Fee();
+            fee.setStudentId(studentId);
+            fee.setAmount(amount);
+            fee.setPaidDate(java.time.LocalDate.now().toString());
             session.persist(fee);
 
             tx.commit();
@@ -55,4 +58,22 @@ public class FeeHibernateDAO {
             );
         }
     }
+
+    public void saveFee(Fee fee) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            var tx = session.beginTransaction();
+            session.persist(fee);
+            tx.commit();
+        }
+    }
+
+    public List<Fee> getFeesByStudentId(int studentId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.createQuery(
+                    "from Fee where studentId = :sid order by paidDate desc",
+                    Fee.class
+            ).setParameter("sid", studentId).list();
+        }
+    }
+
 }

@@ -1,10 +1,15 @@
 const API = "http://localhost:8080";
 
 window.onload = () => {
-  loadDashboard();
   loadRooms();
   loadStudents();
+  loadDashboard();
 };
+
+function logout() {
+  fetch(API + "/logout", { method: "POST" })
+    .then(() => window.location.href = "login.html");
+}
 
 /* ---------------- ROOMS ---------------- */
 

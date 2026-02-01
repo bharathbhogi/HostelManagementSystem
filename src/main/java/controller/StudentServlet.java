@@ -1,26 +1,33 @@
 package controller;
-import dao.RoomHibernateDAO;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dao.RoomHibernateDAO;
 import dao.StudentHibernateDAO;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import model.Student;
+import jakarta.servlet.http.HttpSession;
 import model.Message;
+import model.Student;
+
 import java.io.IOException;
 import java.util.List;
 
 public class StudentServlet extends HttpServlet {
 
     private final StudentHibernateDAO dao = new StudentHibernateDAO();
-    private final ObjectMapper mapper = new ObjectMapper();
     private final RoomHibernateDAO roomDao = new RoomHibernateDAO();
-
+    private final ObjectMapper mapper = new ObjectMapper();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
+
+        HttpSession session = req.getSession(false);
+        if (session == null || session.getAttribute("admin") == null) {
+            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
 
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
@@ -32,7 +39,7 @@ public class StudentServlet extends HttpServlet {
             if (roomNo == null || roomNo.isEmpty()) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 mapper.writeValue(resp.getWriter(),
-                        new MessageResponse("Room number is required"));
+                        new Message("Room number is required"));
                 return;
             }
 
@@ -40,7 +47,7 @@ public class StudentServlet extends HttpServlet {
             if (room == null) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 mapper.writeValue(resp.getWriter(),
-                        new MessageResponse("Room does not exist"));
+                        new Message("Room does not exist"));
                 return;
             }
 
@@ -48,12 +55,12 @@ public class StudentServlet extends HttpServlet {
             if (isFull) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 mapper.writeValue(resp.getWriter(),
-                        new MessageResponse("Room is already full"));
+                        new Message("Room is already full"));
                 return;
             }
 
-
             dao.saveStudent(student);
+
             long count = dao.getStudentsByRoomNo(roomNo).size();
             if (count >= room.getCapacity()) {
                 roomDao.updateRoomStatus(roomNo, "OCCUPIED");
@@ -61,59 +68,63 @@ public class StudentServlet extends HttpServlet {
                 roomDao.updateRoomStatus(roomNo, "AVAILABLE");
             }
 
-
-
             resp.setStatus(HttpServletResponse.SC_CREATED);
             mapper.writeValue(resp.getWriter(),
-                    new MessageResponse("Student added successfully"));
+                    new Message("Student added successfully"));
 
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             mapper.writeValue(resp.getWriter(),
-                    new MessageResponse("Failed to add student"));
+                    new Message("Failed to add student"));
         }
     }
-
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
+        HttpSession session = req.getSession(false);
+        if (session == null || session.getAttribute("admin") == null) {
+            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
 
         String roomNo = req.getParameter("roomNo");
-        List<Student> students;
 
         try {
+            List<Student> students;
             if (roomNo != null && !roomNo.isEmpty()) {
                 students = dao.getStudentsByRoomNo(roomNo);
             } else {
                 students = dao.getAllStudents();
             }
 
-            resp.setStatus(HttpServletResponse.SC_OK);
             mapper.writeValue(resp.getWriter(), students);
 
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             mapper.writeValue(resp.getWriter(),
-                    new MessageResponse("Failed to fetch students"));
-        }
-    }
-
-
-    static class MessageResponse {
-        public String message;
-        public MessageResponse(String message) {
-            this.message = message;
+                    new Message("Failed to fetch students"));
         }
     }
 
     @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String idParam = req.getParameter("id");
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp)
+            throws IOException {
 
+        HttpSession session = req.getSession(false);
+        if (session == null || session.getAttribute("admin") == null) {
+            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+
+        String idParam = req.getParameter("id");
         if (idParam == null) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             mapper.writeValue(resp.getWriter(),
@@ -127,5 +138,4 @@ public class StudentServlet extends HttpServlet {
         mapper.writeValue(resp.getWriter(),
                 new Message("Student removed successfully"));
     }
-
 }
